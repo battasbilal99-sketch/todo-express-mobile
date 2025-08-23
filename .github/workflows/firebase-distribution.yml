@@ -1,0 +1,88 @@
+name: Firebase App Distribution
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'Notes de version'
+        required: false
+        default: 'Build automatique depuis GitHub Actions'
+      testers:
+        description: 'E-mails des testeurs (séparés par des virgules)'
+        required: false
+        default: ''
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  distribute:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build React app
+        run: npm run build
+        
+      - name: Sync Capacitor
+        run: npx cap sync android
+        
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x ./gradlew
+        
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+        
+      - name: Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          groups: testers
+          file: android/app/build/outputs/apk/debug/app-debug.apk
+          releaseNotes: ${{ github.event.inputs.release_notes || 'Build automatique depuis GitHub Actions' }}
+          
+      - name: Generate Distribution Summary
+        run: |
+          echo "## 🚀 Firebase App Distribution" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📱 APK distribué" >> $GITHUB_STEP_SUMMARY
+          APK_SIZE=$(stat -c%s android/app/build/outputs/apk/debug/app-debug.apk)
+          APK_SIZE_MB=$((APK_SIZE / 1024 / 1024))
+          echo "- **Taille**: ${APK_SIZE_MB} MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA-256**: $(sha256sum android/app/build/outputs/apk/debug/app-debug.apk | cut -d' ' -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 👥 Testeurs" >> $GITHUB_STEP_SUMMARY
+          echo "Les testeurs du groupe 'testers' recevront une notification par e-mail." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📝 Notes de version" >> $GITHUB_STEP_SUMMARY
+          echo "${{ github.event.inputs.release_notes || 'Build automatique depuis GitHub Actions' }}" >> $GITHUB_STEP_SUMMARY

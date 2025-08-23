@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Express Mobile - Preview & Download</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+        }
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s;
+            margin-bottom: 15px;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        .web-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .info-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .qr-code {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .qr-code img {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .hash {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 5px;
+            word-break: break-all;
+            margin-top: 10px;
+        }
+        .instructions {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .instructions h4 {
+            color: #92400e;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            color: #92400e;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        .badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 Todo Express Mobile</h1>
+            <p>Application mobile React + Capacitor + SQLite</p>
+            <span class="badge">v1.0 (Build 1)</span>
+        </div>
+        
+        <div class="content">
+            <div class="grid">
+                <!-- APK Android -->
+                <div class="card">
+                    <h3>
+                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M17.6 9.48l1.84-3.18c.16-.31.04-.69-.26-.85a.637.637 0 0 0-.83.22l-1.88 3.24a11.43 11.43 0 0 0-8.94 0L5.65 5.67a.637.637 0 0 0-.83-.22c-.3.16-.42.54-.26.85L6.4 9.48A10.81 10.81 0 0 0 1 18h22A10.81 10.81 0 0 0 17.6 9.48zM7 15.25a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0zm7.5 0a1.25 1.25 0 1 1 2.5 0 1.25 1.25 0 0 1-2.5 0z"/>
+                        </svg>
+                        APK Android
+                    </h3>
+                    
+                    <a href="https://github.com/USERNAME/REPO/actions" class="download-btn" target="_blank">
+                        📥 Télécharger APK Debug
+                    </a>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Version</div>
+                            <div class="info-value">1.0 (Build 1)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Min SDK</div>
+                            <div class="info-value">Android 6.0 (API 23)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Target SDK</div>
+                            <div class="info-value">Android 14 (API 35)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Taille</div>
+                            <div class="info-value">~27 MB</div>
+                        </div>
+                    </div>
+                    
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/USERNAME/REPO/actions" alt="QR Code APK">
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">Scanner pour télécharger</p>
+                    </div>
+                    
+                    <div class="hash">
+                        <strong>SHA-256:</strong><br>
+                        9E45FABDA57E632EC2CC6D5B9818406DC8F05C7B913758B99EFB17FB10F258A3
+                    </div>
+                </div>
+                
+                <!-- Web Preview -->
+                <div class="card">
+                    <h3>
+                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Web Preview
+                    </h3>
+                    
+                    <a href="https://USERNAME.github.io/REPO/" class="download-btn web-btn" target="_blank">
+                        🌐 Ouvrir dans le navigateur
+                    </a>
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Framework</div>
+                            <div class="info-value">React 18 + Vite</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Base de données</div>
+                            <div class="info-value">SQLite (Web SQL)</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Responsive</div>
+                            <div class="info-value">Mobile-first</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">PWA</div>
+                            <div class="info-value">Compatible</div>
+                        </div>
+                    </div>
+                    
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://USERNAME.github.io/REPO/" alt="QR Code Web">
+                        <p style="margin-top: 10px; font-size: 0.9rem; color: #64748b;">Scanner pour ouvrir</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="instructions">
+                <h4>📋 Instructions d'installation & test</h4>
+                <ol>
+                    <li><strong>Android APK</strong> : Télécharger depuis GitHub Actions → Activer "Sources inconnues" → Installer l'APK</li>
+                    <li><strong>Web Preview</strong> : Cliquer sur le lien ou scanner le QR code → Tester directement dans le navigateur</li>
+                    <li><strong>Fonctionnalités</strong> : Gestion des tâches, badges de gamification, paramètres, base SQLite</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

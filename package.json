@@ -1,0 +1,42 @@
+{
+  "name": "todo-express-mobile",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "cap:sync": "npx cap sync android",
+    "cap:sync:dev": "npx cap sync android --config capacitor.config.dev.json",
+    "cap:run": "npm run build && npx cap sync android && npx cap run android",
+    "cap:run:dev": "npx cap run android --config capacitor.config.dev.json --livereload --external",
+    "android:build": "cd android && ./gradlew :app:assembleDebug --no-daemon --stacktrace",
+    "android:build:release": "cd android && ./gradlew :app:assembleRelease --no-daemon --stacktrace",
+    "android:clean": "cd android && ./gradlew clean --no-daemon"
+  },
+  "dependencies": {
+    "@capacitor-community/sqlite": "^7.0.1",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.8.1"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/cli": "^7.4.3",
+    "@capacitor/ios": "^7.4.3",
+    "@eslint/js": "^9.33.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.1",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.33.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "globals": "^16.3.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12",
+    "vite": "^7.1.2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "appId": "com.bilal.todoexpress.dev",
+  "appName": "To-Do Express (Dev)",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "http",
+    "url": "http://10.0.2.2:5173",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

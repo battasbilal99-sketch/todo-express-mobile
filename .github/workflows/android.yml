@@ -1,0 +1,96 @@
+name: Android CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build React app
+        run: npm run build
+        
+      - name: Sync Capacitor
+        run: npx cap sync android
+        
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+            
+      - name: Make gradlew executable
+        working-directory: android
+        run: chmod +x ./gradlew
+        
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew :app:assembleDebug --stacktrace --no-daemon
+        
+      - name: Build Release APK (unsigned)
+        working-directory: android
+        run: ./gradlew :app:assembleRelease --stacktrace --no-daemon
+        
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-${{ github.sha }}
+          path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+          
+      - name: Upload Release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned-${{ github.sha }}
+          path: android/app/build/outputs/apk/release/*.apk
+          retention-days: 30
+          
+      - name: Generate APK Info
+        working-directory: android
+        run: |
+          echo "## 📱 APK Build Info" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Debug APK" >> $GITHUB_STEP_SUMMARY
+          DEBUG_SIZE=$(stat -f%z app/build/outputs/apk/debug/app-debug.apk 2>/dev/null || stat -c%s app/build/outputs/apk/debug/app-debug.apk)
+          DEBUG_SIZE_MB=$((DEBUG_SIZE / 1024 / 1024))
+          echo "- **Taille**: ${DEBUG_SIZE_MB} MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA-256**: $(sha256sum app/build/outputs/apk/debug/app-debug.apk | cut -d' ' -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Release APK" >> $GITHUB_STEP_SUMMARY
+          RELEASE_SIZE=$(stat -f%z app/build/outputs/apk/release/app-release-unsigned.apk 2>/dev/null || stat -c%s app/build/outputs/apk/release/app-release-unsigned.apk)
+          RELEASE_SIZE_MB=$((RELEASE_SIZE / 1024 / 1024))
+          echo "- **Taille**: ${RELEASE_SIZE_MB} MB" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA-256**: $(sha256sum app/build/outputs/apk/release/app-release-unsigned.apk | cut -d' ' -f1)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📥 Téléchargement" >> $GITHUB_STEP_SUMMARY
+          echo "Les APK sont disponibles dans les artefacts de ce workflow." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🌐 Web Preview" >> $GITHUB_STEP_SUMMARY
+          echo "[Ouvrir la preview web](https://$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]' | sed 's/.*\///').github.io/$(echo $GITHUB_REPOSITORY | sed 's/.*\///')/)" >> $GITHUB_STEP_SUMMARY
