@@ -162,3 +162,4 @@ configurations.all {
 4. Push et créer une PR
 
 Le CI vérifiera automatiquement le build Android.
+ci: trigger build
